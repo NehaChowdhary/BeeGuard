@@ -1,0 +1,104 @@
+package ebpf_test
+import data.ebpf.allow
+
+import future.keywords.contains
+import future.keywords.if
+import future.keywords.in
+
+ALLOWED_FUNCTIONS:=[{"funcName":"mptm_encap"},
+					{"funcName":"mptm_redirect"},
+					{"funcName":"parse_pkt_headers"},
+					{"funcName":"set_dst_mac"},
+					{"funcName":"set_src_mac"},
+					{"funcName":"csum_fold_helper"},
+					{"funcName":"ipv4_csum_inline"},
+					{"funcName":"encap_geneve"}
+					]
+
+BLOCKED_FUNCTIONS:=[{"funcName":"mptm_decap"},
+					{"funcName":"mptm_pass"},
+					{"funcName":"__encap_geneve"},
+					{"funcName":"encap_vlan"}
+					]
+#TRUE
+#test_allow_if_TRUE{
+#	allow with input as ALLOWED_FUNCTION
+#}
+
+#0
+test_allow_is_false_by_default_0{
+	not allow
+}
+#1
+test_allow_if_mptm_encap_1{
+	allow with input as {
+		"funcName":"mptm_encap"
+	}
+}
+#2
+test_allow_if_NOT_mptm_decap_2{
+	not allow with input as {
+		"funcName":"mptm_decap"
+	}
+}
+#3
+test_allow_if_mptm_redirect_3{
+	allow with input as {
+		"funcName":"mptm_redirect"
+	}
+}
+#4
+test_allow_if_mptm_pass_4{
+	allow with input as {
+		"funcName":"mptm_pass"
+	}
+}
+#5
+test_allow_if_parse_pkt_headers_5{
+	allow with input as {
+		"funcName":"parse_pkt_headers"
+	}
+}
+#6 
+test_allow_if_set_dst_mac_6{
+	allow with input as {
+		"funcName":"set_dst_mac"
+	}
+}
+#7
+test_allow_if_set_src_mac_7{
+	allow with input as {
+		"funcName":"set_src_mac"
+	}
+}
+#8
+test_allow_if_csum_fold_helper_8{
+	allow with input as {
+		"funcName":"csum_fold_helper"
+	}
+}
+#9 
+test_allow_if_ipv4_csum_inline_9{
+	allow with input as {
+		"funcName":"ipv4_csum_inline"
+	}
+}
+#10
+test_allow_if_NOT___encap_geneve_10{
+	not allow with input as {
+		"funcName":"__encap_geneve"
+	}
+}
+
+#11
+test_allow_if_encap_geneve_11{
+	allow with input as {
+		"funcName":"encap_geneve"
+	}
+}
+#12
+test_allow_if_encap_vlan_12{
+	allow with input as {
+		"funcName":"encap_vlan"
+	}
+}

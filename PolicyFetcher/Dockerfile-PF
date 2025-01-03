@@ -1,0 +1,30 @@
+FROM python:3.11
+
+RUN apt-get update && apt-get install -y \
+    wget \
+    ca-certificates
+
+RUN apt-get install -y curl
+RUN apt-get install -y telnet
+RUN apt-get install -y iputils-ping
+RUN apt-get update && apt-get install -y python3
+
+# Python packages
+RUN apt-get install -y python3-pip
+RUN pip install requests
+RUN pip install argparse 
+RUN pip install datetime
+RUN pip install inquirer
+RUN apt-get install -y libcurl4-openssl-dev libssl-dev
+RUN pip install pycurl
+RUN pip install psutil
+RUN apt-get install psmisc
+RUN pip install flask
+
+COPY entrypoint.sh /entrypoint.sh
+
+# Specify the command to run when the container starts
+#ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["/entrypoint.sh"]
+
+

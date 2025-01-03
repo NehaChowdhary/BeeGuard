@@ -1,0 +1,59 @@
+version: '3'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Adjust the memory allocation as needed
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - elo_net
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+###################################################
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.14.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    networks:
+      - elo_net
+###################################################
+  opa:
+    build: 
+      context: .
+      dockerfile: Dockerfile-OPA
+    image: opa:latest
+    container_name: opa
+    volumes:
+      - ./ebpf:/example
+    depends_on:
+      - elasticsearch
+      - kibana
+    working_dir: /example
+    entrypoint: []
+    command: ["python3", "monitorElastic.py"] 
+    #command: ["tail", "-f", "/dev/null"]
+    ports:
+      - 8181:8181
+      #- 18181:8181
+    networks:
+      - elo_net
+    environment:
+      - URL=http://elasticsearch:9200/index
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://elasticsearch:9200"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    #stdin_open: true 
+    #tty: true
+###################################################
+volumes:
+  es_data:
+###################################################
+networks:
+  elo_net:

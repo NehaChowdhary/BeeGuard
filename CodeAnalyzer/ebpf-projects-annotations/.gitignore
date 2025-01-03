@@ -1,0 +1,12 @@
+op/
+__pycache__
+func.out
+cscope.files
+*cscope*
+tags
+*.out
+*~
+*.*~
+*#*
+wip
+src/a.py

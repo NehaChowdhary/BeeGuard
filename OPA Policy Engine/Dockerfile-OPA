@@ -1,0 +1,33 @@
+# Start from the Ubuntu image
+FROM ubuntu:latest
+
+# Update package list and install necessary dependencies
+RUN apt-get update && apt-get install -y \
+    wget \
+    ca-certificates
+
+RUN apt-get install -y curl
+RUN apt-get install -y telnet
+RUN apt-get install -y iputils-ping
+RUN apt-get update && apt-get install -y python3
+
+# Download and install OPA
+RUN wget -q -O opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64 \
+    && chmod 755 opa \
+    && mv opa /usr/local/bin/
+# Python
+RUN apt-get install -y python3-pip
+RUN apt install -y python3-requests
+RUN pip install argparse 
+RUN pip install datetime
+RUN pip install inquirer
+RUN apt-get install -y libcurl4-openssl-dev libssl-dev
+RUN pip install pycurl
+RUN pip install psutil
+RUN apt-get install psmisc
+
+
+# Specify the command to run when the container starts
+ENTRYPOINT ["/usr/local/bin/opa", "run", "--server"]
+
+

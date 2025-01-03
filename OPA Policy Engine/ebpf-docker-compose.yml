@@ -1,0 +1,13 @@
+version: '3'
+services:
+  opa-eval:
+    image: openpolicyagent/opa
+    container_name: opa_stored_policy
+    volumes:
+      - ./ebpf:/example
+    #stdin_open: true 
+    #tty: true
+    #command: ["/bin/sh", "-c", "python3 monitorElastic.py && run --server --log-level debug /example"] 
+    command: run --server --log-level debug /example
+    ports:
+      - 8181:8181

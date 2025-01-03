@@ -1,0 +1,28 @@
+version: '3'
+services:
+  policyFetcher:
+    build: 
+      context: .
+      dockerfile: Dockerfile-PF
+    image: policy-fetcher:latest
+    container_name: policy_fetcher
+    environment:
+      - URL=http://192.168.0.103:8181/v1/data/ebpf/allow
+      - FILENAME=/boot/kvstore.txt
+    volumes:
+      - ./app:/app
+      - /boot:/boot
+    #entrypoint: ["/startup.sh"]
+    #entrypoint: []
+    #command: ["tail", "-f", "/dev/null"]
+    #command: ["bash","-c", "startup.sh"]
+    privileged: true
+    ports:
+      - 5000:5000
+    #stdin_open: true 
+    #tty: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://192.168.0.103:8181/v1/data/ebpf/allow"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
